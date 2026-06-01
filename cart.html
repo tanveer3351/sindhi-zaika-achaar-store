@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cart – Sindhi Zaika Achaar</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="page">
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="logo-icon"><img src="logo.png" alt="Logo"></div>
+    Sindhi Zaika Achaar
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+    <button class="cart-btn" onclick="window.location='cart.html'">Cart <span class="cart-count" id="cartCount">0</span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> <span>/</span> <span>Shopping Cart</span></div>
+    <h1>Your Cart</h1>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div id="cartContent"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand"><h3>Sindhi Zaika Achaar</h3><p>Authentic handmade Sindhi achaar delivered across Pakistan.</p></div>
+    <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="products.html">Products</a></li></ul></div>
+    <div class="footer-col"><h4>Info</h4><ul><li><a href="#">Shipping Info</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 <span>Sindhi Zaika Achaar</span>. All rights reserved.</div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+const SHIPPING = 150;
+let couponApplied = 0;
+
+function renderCart() {
+  const cart = getCart();
+  const container = document.getElementById('cartContent');
+  if (cart.length === 0) {
+    container.innerHTML = `<div class="empty-state">
+      <img src="logo.png" alt="" style="width:80px; height:80px; border-radius:50%; opacity:.3; margin:0 auto 16px;">
+      <h3>Your cart is empty</h3>
+      <p>Add some delicious achaar to get started.</p>
+      <a href="products.html" class="btn btn-primary btn-lg" style="display:inline-flex;">Browse Products</a>
+    </div>`;
+    return;
+  }
+  const subtotal = cart.reduce((s,i) => s + i.price * i.qty, 0);
+  const total = subtotal + SHIPPING - couponApplied;
+  container.innerHTML = `
+  <div class="cart-layout">
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h3 style="font-family:var(--font-head); font-size:1.3rem;">${cart.length} Item${cart.length!==1?'s':''} in Cart</h3>
+        <button onclick="clearCart()" style="background:none; border:none; color:var(--mid-grey); font-size:.85rem; cursor:pointer; font-family:var(--font-body);">Clear all</button>
+      </div>
+      <div id="cartItems"></div>
+      <a href="products.html" style="display:inline-flex; align-items:center; gap:6px; color:var(--saffron); font-weight:700; font-size:.9rem; margin-top:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+        Continue Shopping
+      </a>
+    </div>
+    <div>
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-row"><span>Subtotal (${cart.reduce((s,i)=>s+i.qty,0)} items)</span><span>PKR ${subtotal}</span></div>
+        <div class="summary-row"><span>Shipping (TCS)</span><span>PKR ${SHIPPING}</span></div>
+        ${couponApplied > 0 ? `<div class="summary-row" style="color:var(--forest);"><span>Coupon Discount</span><span>- PKR ${couponApplied}</span></div>` : ''}
+        <div class="coupon-wrap">
+          <input type="text" id="couponInput" placeholder="Coupon code">
+          <button class="btn btn-outline btn-sm" onclick="applyCoupon()">Apply</button>
+        </div>
+        <div id="couponMsg"></div>
+        <div class="summary-row total"><span>Total</span><span>PKR ${total}</span></div>
+        <a href="checkout.html" class="btn btn-primary btn-block btn-lg" style="margin-top:16px; text-align:center;">Proceed to Checkout</a>
+      </div>
+    </div>
+  </div>`;
+
+  const itemsContainer = document.getElementById('cartItems');
+  itemsContainer.innerHTML = cart.map(item => `
+  <div class="cart-item">
+    <div class="cart-item-img"><img src="${item.image}" alt="${item.name}"></div>
+    <div class="cart-item-info">
+      <div class="cat">${item.cat} achaar</div>
+      <h4>${item.name}</h4>
+      <div style="font-size:.82rem; color:var(--mid-grey);">${item.weight} | PKR ${item.price} each</div>
+      <div class="qty-control" style="margin-top:10px;">
+        <button class="qty-btn" onclick="changeItemQty(${item.id}, -1)">-</button>
+        <span class="qty-num">${item.qty}</span>
+        <button class="qty-btn" onclick="changeItemQty(${item.id}, 1)">+</button>
+      </div>
+    </div>
+    <div class="cart-item-price">
+      <div class="item-total">PKR ${item.price * item.qty}</div>
+      <button class="remove-btn" onclick="removeItem(${item.id})">Remove</button>
+    </div>
+  </div>`).join('');
+}
+
+function changeItemQty(id, d) { updateQty(id, d); renderCart(); }
+function removeItem(id) { removeFromCart(id); renderCart(); }
+function clearCart() { saveCart([]); updateCartCount(); renderCart(); }
+function applyCoupon() {
+  const code = document.getElementById('couponInput').value.trim().toUpperCase();
+  const msg = document.getElementById('couponMsg');
+  if (code === 'SINDHI10') { couponApplied = 100; msg.innerHTML = '<div class="alert alert-success" style="font-size:.82rem; padding:8px 12px; margin-top:8px;">Coupon applied! PKR 100 off.</div>'; renderCart(); }
+  else { msg.innerHTML = '<div class="alert alert-danger" style="font-size:.82rem; padding:8px 12px; margin-top:8px;">Invalid coupon code.</div>'; }
+}
+
+document.addEventListener('DOMContentLoaded', renderCart);
+</script>
+</body>
+</html>

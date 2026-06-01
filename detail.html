@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Details - Sindhi Zaika</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar (same as index) -->
+    <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin-top: 40px;">
+        <img id="p-img" src="" alt="Product" style="width: 100%; border-radius: var(--radius-md);">
+        <div>
+            <h1 id="p-name" style="font-family: var(--font-head);"></h1>
+            <p id="p-weight" style="color: var(--saffron); font-weight: 700;"></p>
+            <h2 id="p-price" style="color: var(--deep-red); margin: 20px 0;"></h2>
+            <p id="p-desc" style="margin-bottom: 30px; color: var(--mid-grey);"></p>
+            
+            <div style="display: flex; gap: 10px;">
+                <input type="number" value="1" id="p-qty" class="form-control" style="width: 80px;">
+                <button onclick="handleAddToCart()" class="btn btn-primary">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = parseInt(urlParams.get('id'));
+        const p = PRODUCTS.find(x => x.id === id);
+
+        if(p) {
+            document.getElementById('p-name').textContent = p.name;
+            document.getElementById('p-price').textContent = `PKR ${p.price}`;
+            document.getElementById('p-weight').textContent = p.weight;
+            document.getElementById('p-desc').textContent = p.desc;
+            document.getElementById('p-img').src = p.image;
+        }
+
+        function handleAddToCart() {
+            const qty = parseInt(document.getElementById('p-qty').value);
+            addToCart(id, qty);
+        }
+    </script>
+</body>
+</html>

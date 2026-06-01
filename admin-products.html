@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Products – Admin</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body style="background:#f5f4f1;">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <div class="logo-wrap"><img src="logo.png" alt="Logo"></div>
+      <div class="admin-brand-text"><h3>Admin</h3><p>Sindhi Zaika</p></div>
+    </div>
+    <nav class="admin-nav">
+      <div class="admin-nav-section">Dashboard</div>
+      <a href="admin-dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <div class="admin-nav-section" style="margin-top:16px;">Management</div>
+      <a href="admin-products.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M9 7h6M9 11h6M9 15h6"/></svg>
+        Products
+      </a>
+      <a href="admin-orders.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 1v2m6-2v2M4 5h16a2 2 0 0 1 2 2v2H2V7a2 2 0 0 1 2-2z"/><rect x="2" y="9" width="20" height="11" rx="2"/></svg>
+        Orders
+      </a>
+      <a href="admin-customers.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Customers
+      </a>
+      <div class="admin-nav-section" style="margin-top:16px;">Other</div>
+      <a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        Back to Store
+      </a>
+      <a onclick="logout()" style="cursor:pointer;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </a>
+    </nav>
+  </aside>
+
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <h1>Manage Products</h1>
+      <div class="admin-user">
+        <button class="btn btn-primary btn-sm" onclick="openAddProductModal()">Add New Product</button>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <div class="table-toolbar">
+        <div class="search-box" style="flex:1; min-width:240px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchProducts" placeholder="Search products..." oninput="searchProducts()">
+        </div>
+        <select id="filterCat" onchange="searchProducts()" style="padding:10px 16px; border:2px solid var(--border); border-radius:8px; font-family:var(--font-body); outline:none;">
+          <option value="">All Categories</option>
+          <option value="mango">Mango</option>
+          <option value="lemon">Lemon</option>
+          <option value="chilli">Chilli</option>
+          <option value="mixed">Mixed</option>
+        </select>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Weight</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Badge</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productsTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add/Edit Product -->
+<div class="modal-backdrop" id="productModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Add Product</h3>
+      <button class="modal-close" onclick="closeProductModal()">×</button>
+    </div>
+    <div class="form-group">
+      <label>Product Name *</label>
+      <input type="text" id="modalName" placeholder="E.g., Mango Achaar">
+      <span class="form-error">Required.</span>
+    </div>
+    <div class="grid-2" style="gap:16px;">
+      <div class="form-group">
+        <label>Category *</label>
+        <select id="modalCat">
+          <option value="">Select</option>
+          <option value="mango">Mango</option>
+          <option value="lemon">Lemon</option>
+          <option value="chilli">Chilli</option>
+          <option value="mixed">Mixed</option>
+        </select>
+        <span class="form-error">Required.</span>
+      </div>
+      <div class="form-group">
+        <label>Weight *</label>
+        <input type="text" id="modalWeight" placeholder="E.g., 500g">
+        <span class="form-error">Required.</span>
+      </div>
+    </div>
+    <div class="grid-2" style="gap:16px;">
+      <div class="form-group">
+        <label>Price (PKR) *</label>
+        <input type="number" id="modalPrice" placeholder="250">
+        <span class="form-error">Required.</span>
+      </div>
+      <div class="form-group">
+        <label>Stock *</label>
+        <input type="number" id="modalStock" placeholder="50">
+        <span class="form-error">Required.</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="modalDesc" placeholder="Product description..."></textarea>
+    </div>
+    <div class="grid-2" style="gap:16px;">
+      <div class="form-group">
+        <label>Badge</label>
+        <select id="modalBadge">
+          <option value="">None</option>
+          <option value="hot">Hot</option>
+          <option value="new">New</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Image File</label>
+        <select id="modalImage">
+          <option value="mango-achaar.png">mango-achaar.png</option>
+          <option value="lemon-achaar.png">lemon-achaar.png</option>
+          <option value="chilli-achaar.png">chilli-achaar.png</option>
+          <option value="mixed-achaar.png">mixed-achaar.png</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex; gap:12px; margin-top:24px;">
+      <button class="btn btn-outline" onclick="closeProductModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+let productsList = [...PRODUCTS];
+let editingId = null;
+
+function renderProductsTable() {
+  const search = document.getElementById('searchProducts').value.toLowerCase();
+  const cat = document.getElementById('filterCat').value;
+  let filtered = productsList.filter(p =>
+    (p.name.toLowerCase().includes(search) || p.cat.toLowerCase().includes(search)) &&
+    (!cat || p.cat === cat)
+  );
+  document.getElementById('productsTable').innerHTML = filtered.map(p => `
+    <tr>
+      <td><img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; border-radius:4px; object-fit:cover;"></td>
+      <td><strong>${p.name}</strong></td>
+      <td style="text-transform:capitalize;">${p.cat}</td>
+      <td>${p.weight}</td>
+      <td>PKR ${p.price}</td>
+      <td>${p.stock}</td>
+      <td>${p.badge ? '<span class="badge-' + p.badge + '">' + (p.badge==='hot'?'Hot':'New') + '</span>' : '-'}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editProduct(${p.id})">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})" style="margin-left:4px;">Delete</button>
+      </td>
+    </tr>`).join('');
+}
+
+function openAddProductModal() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'Add Product';
+  document.getElementById('modalName').value = '';
+  document.getElementById('modalCat').value = '';
+  document.getElementById('modalWeight').value = '';
+  document.getElementById('modalPrice').value = '';
+  document.getElementById('modalStock').value = '';
+  document.getElementById('modalDesc').value = '';
+  document.getElementById('modalBadge').value = '';
+  document.getElementById('modalImage').value = 'mango-achaar.png';
+  document.getElementById('productModal').classList.add('open');
+}
+
+function editProduct(id) {
+  const p = productsList.find(x => x.id === id);
+  if (!p) return;
+  editingId = id;
+  document.getElementById('modalTitle').textContent = 'Edit Product';
+  document.getElementById('modalName').value = p.name;
+  document.getElementById('modalCat').value = p.cat;
+  document.getElementById('modalWeight').value = p.weight;
+  document.getElementById('modalPrice').value = p.price;
+  document.getElementById('modalStock').value = p.stock;
+  document.getElementById('modalDesc').value = p.desc;
+  document.getElementById('modalBadge').value = p.badge;
+  document.getElementById('modalImage').value = p.image;
+  document.getElementById('productModal').classList.add('open');
+}
+
+function closeProductModal() {
+  document.getElementById('productModal').classList.remove('open');
+}
+
+function saveProduct() {
+  const fields = ['modalName','modalCat','modalWeight','modalPrice','modalStock'];
+  let valid = true;
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    const grp = el.closest('.form-group');
+    grp.classList.remove('error');
+    if (!el.value) { grp.classList.add('error'); valid = false; }
+  });
+  if (!valid) return;
+
+  const data = {
+    name: document.getElementById('modalName').value,
+    cat: document.getElementById('modalCat').value,
+    weight: document.getElementById('modalWeight').value,
+    price: parseInt(document.getElementById('modalPrice').value),
+    stock: parseInt(document.getElementById('modalStock').value),
+    desc: document.getElementById('modalDesc').value,
+    badge: document.getElementById('modalBadge').value,
+    image: document.getElementById('modalImage').value
+  };
+
+  if (editingId) {
+    const idx = productsList.findIndex(p => p.id === editingId);
+    if (idx > -1) Object.assign(productsList[idx], data);
+  } else {
+    const newId = Math.max(...productsList.map(p => p.id), 0) + 1;
+    productsList.push({ id: newId, ...data });
+  }
+  localStorage.setItem('products', JSON.stringify(productsList));
+  closeProductModal();
+  renderProductsTable();
+}
+
+function deleteProduct(id) {
+  if (confirm('Delete this product? This action cannot be undone.')) {
+    productsList = productsList.filter(p => p.id !== id);
+    localStorage.setItem('products', JSON.stringify(productsList));
+    renderProductsTable();
+  }
+}
+
+function searchProducts() { renderProductsTable(); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!isAdmin()) { window.location.href = 'admin-login.html'; return; }
+  renderProductsTable();
+});
+</script>
+</body>
+</html>

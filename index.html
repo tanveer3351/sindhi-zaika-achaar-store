@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sindhi Zaika Achaar – Authentic Handmade Pickles</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="page">
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="logo-icon"><img src="logo.png" alt="Logo"></div>
+    Sindhi Zaika Achaar
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Register</a>
+    <button class="cart-btn" onclick="window.location='cart.html'">
+      Cart <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Handmade in Sindh, Pakistan</div>
+    <h1>Authentic <em>Sindhi Achaar</em> Delivered Across Pakistan</h1>
+    <p>Handcrafted using generations-old recipes from the heart of Sindh. Mango, lemon, chilli and more — pure, fresh, and full of flavour.</p>
+    <div class="hero-actions">
+      <a href="products.html" class="btn btn-primary btn-lg">Shop Now</a>
+      <a href="#about" class="btn btn-outline btn-lg">Our Story</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="jar-grid">
+      <div class="hero-jar">
+        <img class="jar-img" src="mango-achaar.png" alt="Mango Achaar">
+        <div class="name">Mango Achaar</div>
+        <div class="price">PKR 250</div>
+      </div>
+      <div class="hero-jar">
+        <img class="jar-img" src="lemon-achaar.png" alt="Lemon Achaar">
+        <div class="name">Lemon Achaar</div>
+        <div class="price">PKR 200</div>
+      </div>
+      <div class="hero-jar">
+        <img class="jar-img" src="chilli-achaar.png" alt="Chilli Achaar">
+        <div class="name">Chilli Achaar</div>
+        <div class="price">PKR 180</div>
+      </div>
+      <div class="hero-jar">
+        <img class="jar-img" src="mixed-achaar.png" alt="Mixed Achaar">
+        <div class="name">Mixed Achaar</div>
+        <div class="price">PKR 280</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORY STRIP -->
+<section style="background:var(--cream); border-top:2px solid var(--border); border-bottom:2px solid var(--border); padding:20px 5vw;">
+  <div class="container">
+    <div style="display:flex; gap:12px; overflow-x:auto; padding-bottom:4px; flex-wrap:wrap;">
+      <a href="products.html?cat=all" class="cat-pill active-pill">All Products</a>
+      <a href="products.html?cat=mango" class="cat-pill">Mango Achaar</a>
+      <a href="products.html?cat=lemon" class="cat-pill">Lemon Achaar</a>
+      <a href="products.html?cat=chilli" class="cat-pill">Chilli Achaar</a>
+      <a href="products.html?cat=mixed" class="cat-pill">Mixed Achaar</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="tag">Customer Favourites</span>
+      <h2>Our Best Achaar</h2>
+      <p>Pure ingredients, traditional spices, zero preservatives — made with love from Sindh.</p>
+    </div>
+    <div class="grid-4" id="featuredGrid"></div>
+    <div style="text-align:center; margin-top:40px;">
+      <a href="products.html" class="btn btn-primary btn-lg">View All Products</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="section" style="background:var(--cream);">
+  <div class="container">
+    <div class="section-header">
+      <span class="tag">Why Sindhi Zaika</span>
+      <h2>Taste the Difference</h2>
+    </div>
+    <div class="grid-3">
+      <div class="feature-card fade-in delay-1">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h3>100% Natural</h3>
+        <p>No artificial colours, preservatives, or additives. Pure traditional Sindhi achaar the way it was always made.</p>
+      </div>
+      <div class="feature-card fade-in delay-2">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24"><path d="M5 12H19M5 12l4-4M5 12l4 4"/></svg>
+        </div>
+        <h3>Nationwide Delivery</h3>
+        <p>We ship via TCS courier to any city in Pakistan. Track your shipment directly on TCS website.</p>
+      </div>
+      <div class="feature-card fade-in delay-3">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3>Secure Payments</h3>
+        <p>Pay safely via Easypaisa or JazzCash. All transactions are encrypted and secure.</p>
+      </div>
+      <div class="feature-card fade-in delay-2">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <h3>Handmade Recipes</h3>
+        <p>Every jar is prepared in small batches using generations-old Sindhi family recipes.</p>
+      </div>
+      <div class="feature-card fade-in delay-3">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0v10l-8 4m-8-4V7m16 0L12 12M4 7l8 5"/></svg>
+        </div>
+        <h3>Hygienic Packaging</h3>
+        <p>Properly sealed, air-tight jars to preserve freshness throughout delivery.</p>
+      </div>
+      <div class="feature-card fade-in delay-4">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>Authentic Taste</h3>
+        <p>Loved by customers across Sindh for over 10 years. Now available online for all of Pakistan.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;">
+      <div>
+        <span class="tag">Our Story</span>
+        <h2 style="font-family:var(--font-head); font-size:2.2rem; margin:12px 0 18px; color:var(--charcoal);">
+          From a Small Village in Sindh to Your Table
+        </h2>
+        <p style="color:var(--mid-grey); margin-bottom:16px;">
+          Sindhi Zaika Achaar is a home-based business run by <strong>Raza Ali Khaskheli</strong> from the village of Karam Khan Nizamani, District Matiari, Sindh.
+        </p>
+        <p style="color:var(--mid-grey); margin-bottom:16px;">
+          For years, Raza Ali has been preparing traditional handmade Sindhi achaar using centuries-old family recipes. What started as local sharing quickly grew into demand from people across Sindh and beyond.
+        </p>
+        <p style="color:var(--mid-grey); margin-bottom:28px;">
+          This online store is our way of bringing authentic Sindhi flavours to every corner of Pakistan — without compromising on the quality, taste, or tradition.
+        </p>
+        <a href="products.html" class="btn btn-primary">Shop Our Achaar</a>
+      </div>
+      <div style="background:linear-gradient(145deg,var(--cream),#ffe8b0); border-radius:var(--radius-lg); padding:48px; text-align:center; border:2px solid var(--border);">
+        <img src="logo.png" alt="Sindhi Zaika Logo" style="width:120px; height:120px; object-fit:cover; border-radius:50%; margin:0 auto 16px; border:3px solid var(--saffron);">
+        <div style="font-family:var(--font-head); font-size:1.4rem; color:var(--deep-red); margin-bottom:8px;">Raza Ali Khaskheli</div>
+        <div style="color:var(--mid-grey); font-size:.9rem;">Founder &amp; Achaar Master</div>
+        <div style="margin-top:20px; font-size:.88rem; color:var(--mid-grey);">Karam Khan Nizamani, District Matiari, Sindh</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" style="background:var(--charcoal);" id="contact">
+  <div class="container" style="text-align:center;">
+    <span class="tag" style="color:var(--saffron);">Contact Us</span>
+    <h2 style="font-family:var(--font-head); font-size:2.2rem; color:#fff; margin:12px 0 16px;">Have a Question?</h2>
+    <p style="color:#bbb; margin-bottom:32px;">We are just a message away. Contact us via WhatsApp or email.</p>
+    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <a href="https://wa.me/923001234567" class="btn" style="background:#25D366; color:#fff; border-color:#25D366;">WhatsApp Us</a>
+      <a href="mailto:sindhizaikaachaar@gmail.com" class="btn btn-outline-white">Email Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>Sindhi Zaika Achaar</h3>
+      <p>Authentic handmade Sindhi achaar delivered across Pakistan. Made with love, tradition, and the finest ingredients.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="login.html">My Account</a></li>
+        <li><a href="order-history.html">Order History</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Shipping Info</a></li>
+        <li><a href="#">Refund Policy</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; 2026 <span>Sindhi Zaika Achaar</span>. All rights reserved. Made with love in Sindh, Pakistan.
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const grid = document.getElementById('featuredGrid');
+  PRODUCTS.slice(0,4).forEach(p => { grid.innerHTML += generateProductCard(p); });
+});
+</script>
+</body>
+</html>

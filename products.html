@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Products – Sindhi Zaika Achaar</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="page">
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="logo-icon"><img src="logo.png" alt="Logo"></div>
+    Sindhi Zaika Achaar
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html" class="active">Products</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Register</a>
+    <button class="cart-btn" onclick="window.location='cart.html'">Cart <span class="cart-count" id="cartCount">0</span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> <span>/</span> <span>Products</span></div>
+    <h1>Our Achaar Collection</h1>
+    <p>Handmade with love using traditional Sindhi recipes. Zero preservatives, all taste.</p>
+  </div>
+</div>
+
+<!-- Search + Filter Bar -->
+<div style="background:#fff; border-bottom:2px solid var(--border); padding:16px 5vw; position:sticky; top:var(--navbar-h); z-index:99;">
+  <div class="container" style="display:flex; gap:16px; flex-wrap:wrap; align-items:center;">
+    <div class="search-box" style="flex:1; min-width:200px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Search achaar..." oninput="filterProducts()">
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="filter-btn active" data-cat="all" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" data-cat="mango" onclick="setFilter('mango',this)">Mango</button>
+      <button class="filter-btn" data-cat="lemon" onclick="setFilter('lemon',this)">Lemon</button>
+      <button class="filter-btn" data-cat="chilli" onclick="setFilter('chilli',this)">Chilli</button>
+      <button class="filter-btn" data-cat="mixed" onclick="setFilter('mixed',this)">Mixed</button>
+    </div>
+    <select id="sortSelect" onchange="filterProducts()" style="padding:10px 16px; border:2px solid var(--border); border-radius:50px; font-family:var(--font-body); font-size:.88rem; cursor:pointer; outline:none;">
+      <option value="default">Sort By</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="name">Name A-Z</option>
+    </select>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+      <p id="resultCount" style="color:var(--mid-grey); font-size:.9rem; font-weight:600;"></p>
+    </div>
+    <div class="grid-4" id="productGrid"></div>
+    <div id="noResults" style="display:none;" class="empty-state">
+      <div class="empty-state-icon"><img src="logo.png" alt="" style="width:60px; height:60px; border-radius:50%; opacity:.4;"></div>
+      <h3>No Products Found</h3>
+      <p>Try a different search term or category.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand"><h3>Sindhi Zaika Achaar</h3><p>Authentic handmade Sindhi achaar delivered across Pakistan.</p></div>
+    <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="products.html">Products</a></li><li><a href="login.html">My Account</a></li></ul></div>
+    <div class="footer-col"><h4>Info</h4><ul><li><a href="#">Privacy Policy</a></li><li><a href="#">Shipping Info</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 <span>Sindhi Zaika Achaar</span>. All rights reserved.</div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+let currentCat = 'all';
+
+function setFilter(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterProducts();
+}
+
+function filterProducts() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const sort = document.getElementById('sortSelect').value;
+  let filtered = PRODUCTS.filter(p =>
+    (currentCat === 'all' || p.cat === currentCat) &&
+    (p.name.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q))
+  );
+  if (sort === 'price-asc') filtered.sort((a,b) => a.price - b.price);
+  else if (sort === 'price-desc') filtered.sort((a,b) => b.price - a.price);
+  else if (sort === 'name') filtered.sort((a,b) => a.name.localeCompare(b.name));
+  const grid = document.getElementById('productGrid');
+  document.getElementById('resultCount').textContent = `${filtered.length} product${filtered.length!==1?'s':''} found`;
+  if (filtered.length === 0) { grid.innerHTML = ''; document.getElementById('noResults').style.display = 'block'; return; }
+  document.getElementById('noResults').style.display = 'none';
+  grid.innerHTML = filtered.map(p => generateProductCard(p)).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const initCat = params.get('cat') || 'all';
+  if (initCat !== 'all') {
+    currentCat = initCat;
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.cat === initCat);
+    });
+  }
+  filterProducts();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order Confirmed – Sindhi Zaika Achaar</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="page">
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="logo-icon"><img src="logo.png" alt="Logo"></div>
+    Sindhi Zaika Achaar
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="cart-btn" onclick="window.location='cart.html'">Cart <span class="cart-count" id="cartCount">0</span></button>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container" style="max-width:700px;">
+    <div class="confirmation-card">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h1 style="font-family:var(--font-head); font-size:2rem; color:var(--charcoal); margin-bottom:10px;">Order Placed!</h1>
+      <p style="color:var(--mid-grey); margin-bottom:24px;">Thank you for your order. We have received it and will process it shortly.</p>
+      <div id="orderDetails" style="background:var(--cream); border-radius:var(--radius-md); border:1px solid var(--border); padding:24px; text-align:left; margin-bottom:32px;"></div>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <a href="order-history.html" class="btn btn-outline btn-lg">View My Orders</a>
+        <a href="products.html" class="btn btn-primary btn-lg">Continue Shopping</a>
+      </div>
+      <div style="margin-top:24px; padding:16px; background:#e3f2fd; border-radius:var(--radius-sm); border:1px solid #90caf9; font-size:.85rem; color:#1565c0;">
+        We will contact you on WhatsApp / call to confirm your order and payment details before dispatch.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand"><h3>Sindhi Zaika Achaar</h3><p>Authentic handmade Sindhi achaar delivered across Pakistan.</p></div>
+    <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="products.html">Products</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="index.html#contact">WhatsApp Us</a></li><li><a href="index.html#contact">Email Us</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 <span>Sindhi Zaika Achaar</span>. All rights reserved.</div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const order = JSON.parse(localStorage.getItem('lastOrder') || 'null');
+  const container = document.getElementById('orderDetails');
+  if (!order) { container.innerHTML = '<p>No recent order found.</p>'; return; }
+  const payLabels = { easypaisa:'Easypaisa', jazzcash:'JazzCash', cod:'Cash on Delivery' };
+  container.innerHTML = `
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+      <div><div style="font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--mid-grey); margin-bottom:4px;">Order ID</div><div style="font-weight:800; color:var(--saffron);">${order.id}</div></div>
+      <div><div style="font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--mid-grey); margin-bottom:4px;">Date</div><div style="font-weight:600;">${order.date}</div></div>
+      <div><div style="font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--mid-grey); margin-bottom:4px;">Payment</div><div style="font-weight:600;">${payLabels[order.payment] || order.payment}</div></div>
+      <div><div style="font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--mid-grey); margin-bottom:4px;">Status</div><span class="status status-pending">Pending</span></div>
+    </div>
+    <div style="border-top:1px solid var(--border); padding-top:16px;">
+      <div style="font-size:.82rem; font-weight:700; text-transform:uppercase; color:var(--mid-grey); margin-bottom:10px;">Delivery to: ${order.customer}</div>
+      <div style="font-size:.88rem; color:var(--mid-grey); margin-bottom:16px;">${order.address}, ${order.city}</div>
+      ${order.items.map(i => `<div style="display:flex; justify-content:space-between; font-size:.88rem; margin-bottom:6px;"><span>${i.name} x${i.qty}</span><span style="font-weight:700;">PKR ${i.price*i.qty}</span></div>`).join('')}
+      <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:800; border-top:1px solid var(--border); padding-top:10px; margin-top:8px;"><span>Total Paid</span><span style="color:var(--deep-red);">PKR ${order.grandTotal}</span></div>
+    </div>`;
+});
+</script>
+</body>
+</html>

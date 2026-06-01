@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Orders – Admin</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body style="background:#f5f4f1;">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <div class="logo-wrap"><img src="logo.png" alt="Logo"></div>
+      <div class="admin-brand-text"><h3>Admin</h3><p>Sindhi Zaika</p></div>
+    </div>
+    <nav class="admin-nav">
+      <div class="admin-nav-section">Dashboard</div>
+      <a href="admin-dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <div class="admin-nav-section" style="margin-top:16px;">Management</div>
+      <a href="admin-products.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M9 7h6M9 11h6M9 15h6"/></svg>
+        Products
+      </a>
+      <a href="admin-orders.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 1v2m6-2v2M4 5h16a2 2 0 0 1 2 2v2H2V7a2 2 0 0 1 2-2z"/><rect x="2" y="9" width="20" height="11" rx="2"/></svg>
+        Orders
+      </a>
+      <a href="admin-customers.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Customers
+      </a>
+      <div class="admin-nav-section" style="margin-top:16px;">Other</div>
+      <a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        Back to Store
+      </a>
+      <a onclick="logout()" style="cursor:pointer;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </a>
+    </nav>
+  </aside>
+
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <h1>Manage Orders</h1>
+      <div style="color:var(--mid-grey); font-size:.85rem;">Total: <strong id="totalOrders">0</strong> orders</div>
+    </div>
+
+    <div class="admin-content">
+      <div class="table-toolbar">
+        <div class="search-box" style="flex:1; min-width:240px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchOrders" placeholder="Search by order ID or customer..." oninput="searchOrders()">
+        </div>
+        <select id="filterStatus" onchange="searchOrders()" style="padding:10px 16px; border:2px solid var(--border); border-radius:8px; font-family:var(--font-body); outline:none;">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="processing">Processing</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Order Details -->
+<div class="modal-backdrop" id="orderModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Order Details</h3>
+      <button class="modal-close" onclick="closeOrderModal()">×</button>
+    </div>
+    <div id="orderDetails"></div>
+    <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border);">
+      <label style="font-weight:700; margin-bottom:8px; display:block;">Update Status:</label>
+      <select id="statusSelect" style="padding:10px 14px; border:2px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font-body); outline:none; width:100%;">
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="processing">Processing</option>
+        <option value="shipped">Shipped</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <button class="btn btn-primary" onclick="updateOrderStatus()" style="margin-top:12px; width:100%;">Update Status</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+let ordersList = [...getOrders()];
+let selectedOrderId = null;
+const statusColors = { pending:'status-pending', confirmed:'status-confirmed', processing:'status-processing', shipped:'status-shipped', delivered:'status-delivered', cancelled:'status-cancelled' };
+
+function renderOrdersTable() {
+  const search = document.getElementById('searchOrders').value.toLowerCase();
+  const status = document.getElementById('filterStatus').value;
+  let filtered = ordersList.filter(o =>
+    (o.id.toLowerCase().includes(search) || o.customer.toLowerCase().includes(search)) &&
+    (!status || o.status === status)
+  );
+  document.getElementById('totalOrders').textContent = ordersList.length;
+  document.getElementById('ordersTable').innerHTML = filtered.map(o => `
+    <tr>
+      <td><strong>${o.id}</strong></td>
+      <td>${o.customer}</td>
+      <td>${o.items.length} item${o.items.length!==1?'s':''}</td>
+      <td><strong>PKR ${o.grandTotal}</strong></td>
+      <td style="text-transform:capitalize;">${o.payment}</td>
+      <td><span class="status ${statusColors[o.status] || 'status-pending'}">${o.status}</span></td>
+      <td>${o.date}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="viewOrder('${o.id}')">View</button>
+      </td>
+    </tr>`).join('');
+}
+
+function viewOrder(id) {
+  const order = ordersList.find(o => o.id === id);
+  if (!order) return;
+  selectedOrderId = id;
+  document.getElementById('statusSelect').value = order.status;
+  document.getElementById('orderDetails').innerHTML = `
+    <div style="background:var(--cream); border-radius:var(--radius-sm); padding:16px; margin-bottom:16px; border:1px solid var(--border);">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+        <div>
+          <div style="font-size:.72rem; font-weight:700; text-transform:uppercase; color:var(--mid-grey); margin-bottom:4px;">Order ID</div>
+          <div style="font-weight:800; color:var(--saffron);">${order.id}</div>
+        </div>
+        <div>
+          <div style="font-size:.72rem; font-weight:700; text-transform:uppercase; color:var(--mid-grey); margin-bottom:4px;">Date</div>
+          <div style="font-weight:600;">${order.date}</div>
+        </div>
+        <div>
+          <div style="font-size:.72rem; font-weight:700; text-transform:uppercase; color:var(--mid-grey); margin-bottom:4px;">Payment Method</div>
+          <div style="font-weight:600;">${order.payment}</div>
+        </div>
+        <div>
+          <div style="font-size:.72rem; font-weight:700; text-transform:uppercase; color:var(--mid-grey); margin-bottom:4px;">Total</div>
+          <div style="font-weight:800; color:var(--deep-red);">PKR ${order.grandTotal}</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--cream); border-radius:var(--radius-sm); padding:16px; margin-bottom:16px; border:1px solid var(--border);">
+      <h4 style="margin-bottom:12px; font-size:.95rem;">Customer Information</h4>
+      <p style="font-size:.88rem; color:var(--mid-grey); line-height:1.8;">
+        <strong>${order.customer}</strong><br>
+        ${order.email}<br>
+        ${order.phone}
+      </p>
+    </div>
+    <div style="background:var(--cream); border-radius:var(--radius-sm); padding:16px; margin-bottom:16px; border:1px solid var(--border);">
+      <h4 style="margin-bottom:12px; font-size:.95rem;">Delivery Address</h4>
+      <p style="font-size:.88rem; color:var(--mid-grey);">
+        ${order.address}, ${order.city}
+      </p>
+    </div>
+    <div style="background:var(--cream); border-radius:var(--radius-sm); padding:16px; border:1px solid var(--border);">
+      <h4 style="margin-bottom:12px; font-size:.95rem;">Items (${order.items.length})</h4>
+      ${order.items.map(i => `<div style="display:flex; justify-content:space-between; font-size:.88rem; margin-bottom:8px;"><span>${i.name} x${i.qty} (${i.weight})</span><span style="font-weight:700;">PKR ${i.price*i.qty}</span></div>`).join('')}
+      <div style="display:flex; justify-content:space-between; font-size:.9rem; font-weight:800; border-top:1px solid var(--border); padding-top:10px; margin-top:8px;">
+        <span>Grand Total (incl. shipping PKR 150)</span><span style="color:var(--deep-red);">PKR ${order.grandTotal}</span>
+      </div>
+    </div>`;
+  document.getElementById('orderModal').classList.add('open');
+}
+
+function closeOrderModal() {
+  document.getElementById('orderModal').classList.remove('open');
+}
+
+function updateOrderStatus() {
+  const newStatus = document.getElementById('statusSelect').value;
+  const idx = ordersList.findIndex(o => o.id === selectedOrderId);
+  if (idx > -1) {
+    ordersList[idx].status = newStatus;
+    saveOrders(ordersList);
+    closeOrderModal();
+    renderOrdersTable();
+  }
+}
+
+function searchOrders() { renderOrdersTable(); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!isAdmin()) { window.location.href = 'admin-login.html'; return; }
+  renderOrdersTable();
+});
+</script>
+</body>
+</html>

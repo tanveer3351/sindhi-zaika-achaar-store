@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Customers – Admin</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body style="background:#f5f4f1;">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <div class="logo-wrap"><img src="logo.png" alt="Logo"></div>
+      <div class="admin-brand-text"><h3>Admin</h3><p>Sindhi Zaika</p></div>
+    </div>
+    <nav class="admin-nav">
+      <div class="admin-nav-section">Dashboard</div>
+      <a href="admin-dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <div class="admin-nav-section" style="margin-top:16px;">Management</div>
+      <a href="admin-products.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M9 7h6M9 11h6M9 15h6"/></svg>
+        Products
+      </a>
+      <a href="admin-orders.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 1v2m6-2v2M4 5h16a2 2 0 0 1 2 2v2H2V7a2 2 0 0 1 2-2z"/><rect x="2" y="9" width="20" height="11" rx="2"/></svg>
+        Orders
+      </a>
+      <a href="admin-customers.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Customers
+      </a>
+      <div class="admin-nav-section" style="margin-top:16px;">Other</div>
+      <a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        Back to Store
+      </a>
+      <a onclick="logout()" style="cursor:pointer;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </a>
+    </nav>
+  </aside>
+
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <h1>Manage Customers</h1>
+      <div style="color:var(--mid-grey); font-size:.85rem;">Total: <strong id="totalCustomers">0</strong> customers</div>
+    </div>
+
+    <div class="admin-content">
+      <div class="table-toolbar">
+        <div class="search-box" style="flex:1; min-width:240px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchCustomers" placeholder="Search by name, email, or phone..." oninput="searchCustomers()">
+        </div>
+        <select id="filterCity" onchange="searchCustomers()" style="padding:10px 16px; border:2px solid var(--border); border-radius:8px; font-family:var(--font-body); outline:none;">
+          <option value="">All Cities</option>
+          <option value="Karachi">Karachi</option>
+          <option value="Lahore">Lahore</option>
+          <option value="Islamabad">Islamabad</option>
+          <option value="Hyderabad">Hyderabad</option>
+          <option value="Sukkur">Sukkur</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>City</th>
+              <th>Total Orders</th>
+              <th>Spent</th>
+              <th>Joined</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="customersTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+let customersList = [];
+
+function loadCustomersData() {
+  const users = getUsers().filter(u => u.role === 'customer');
+  const orders = getOrders();
+  customersList = users.map(u => {
+    const userOrders = orders.filter(o => o.email === u.email);
+    const spent = userOrders.reduce((s,o) => s+o.grandTotal, 0);
+    return {
+      ...u,
+      totalOrders: userOrders.length,
+      spent: spent
+    };
+  });
+}
+
+function renderCustomersTable() {
+  const search = document.getElementById('searchCustomers').value.toLowerCase();
+  const city = document.getElementById('filterCity').value;
+  let filtered = customersList.filter(c =>
+    (c.name.toLowerCase().includes(search) || c.email.toLowerCase().includes(search) || c.phone.includes(search)) &&
+    (!city || c.city === city)
+  );
+  document.getElementById('totalCustomers').textContent = customersList.length;
+  document.getElementById('customersTable').innerHTML = filtered.length === 0 ? 
+    '<tr><td colspan="8" style="text-align:center; padding:40px; color:var(--mid-grey);">No customers found</td></tr>' :
+    filtered.map(c => `
+    <tr>
+      <td><strong>${c.name}</strong></td>
+      <td>${c.email}</td>
+      <td>${c.phone}</td>
+      <td>${c.city}</td>
+      <td style="text-align:center;"><strong>${c.totalOrders}</strong></td>
+      <td><strong style="color:var(--forest);">PKR ${c.spent.toLocaleString()}</strong></td>
+      <td>${c.joinDate}</td>
+      <td><span class="status" style="background:#e8f5e9; color:#2e7d32;">Active</span></td>
+    </tr>`).join('');
+}
+
+function searchCustomers() { renderCustomersTable(); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!isAdmin()) { window.location.href = 'admin-login.html'; return; }
+  loadCustomersData();
+  renderCustomersTable();
+});
+</script>
+</body>
+</html>

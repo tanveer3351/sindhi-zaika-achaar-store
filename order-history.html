@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Orders – Sindhi Zaika Achaar</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="page">
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="logo-icon"><img src="logo.png" alt="Logo"></div>
+    Sindhi Zaika Achaar
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button onclick="logout()" class="btn btn-outline btn-sm">Logout</button>
+    <button class="cart-btn" onclick="window.location='cart.html'">Cart <span class="cart-count" id="cartCount">0</span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> <span>/</span> <span>My Orders</span></div>
+    <h1>My Order History</h1>
+    <p id="welcomeMsg"></p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div style="display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+      <button class="filter-btn active" data-status="all" onclick="filterOrders('all',this)">All Orders</button>
+      <button class="filter-btn" data-status="pending" onclick="filterOrders('pending',this)">Pending</button>
+      <button class="filter-btn" data-status="processing" onclick="filterOrders('processing',this)">Processing</button>
+      <button class="filter-btn" data-status="shipped" onclick="filterOrders('shipped',this)">Shipped</button>
+      <button class="filter-btn" data-status="delivered" onclick="filterOrders('delivered',this)">Delivered</button>
+    </div>
+    <div id="ordersContainer"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand"><h3>Sindhi Zaika Achaar</h3><p>Authentic handmade Sindhi achaar delivered across Pakistan.</p></div>
+    <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="products.html">Products</a></li></ul></div>
+    <div class="footer-col"><h4>Info</h4><ul><li><a href="#">Shipping Info</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 <span>Sindhi Zaika Achaar</span>. All rights reserved.</div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+let allOrders = [];
+const statusColors = { pending:'status-pending', confirmed:'status-confirmed', processing:'status-processing', shipped:'status-shipped', delivered:'status-delivered', cancelled:'status-cancelled' };
+
+function filterOrders(status, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = status === 'all' ? allOrders : allOrders.filter(o => o.status === status);
+  renderOrders(filtered);
+}
+
+function renderOrders(orders) {
+  const c = document.getElementById('ordersContainer');
+  if (!orders.length) {
+    c.innerHTML = `<div class="empty-state"><img src="logo.png" alt="" style="width:70px; height:70px; border-radius:50%; opacity:.3; margin:0 auto 16px;"><h3>No Orders Found</h3><p>You have not placed any orders yet.</p><a href="products.html" class="btn btn-primary" style="display:inline-flex;">Start Shopping</a></div>`;
+    return;
+  }
+  c.innerHTML = orders.slice().reverse().map(o => `
+  <div class="order-card">
+    <div class="order-card-header">
+      <div>
+        <div class="order-id">${o.id}</div>
+        <div style="font-size:.8rem; color:var(--mid-grey); margin-top:2px;">${o.date} &bull; ${o.items.length} item${o.items.length!==1?'s':''}</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="status ${statusColors[o.status] || 'status-pending'}">${o.status}</span>
+        <span style="font-weight:800; color:var(--deep-red);">PKR ${o.grandTotal}</span>
+      </div>
+    </div>
+    <div class="order-card-body">
+      <div class="order-items-preview">
+        ${o.items.map(i => `<div class="order-item-chip"><img src="${i.image}" alt="${i.name}"><span>${i.name} x${i.qty}</span></div>`).join('')}
+      </div>
+      <div class="order-total-row">
+        <div style="font-size:.82rem; color:var(--mid-grey);">Payment: <strong>${o.payment}</strong> &bull; Ship to: ${o.city}</div>
+        <button class="btn btn-outline btn-sm" onclick="reorder(${JSON.stringify(o.items).split('"').join('&quot;')})">Reorder</button>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function reorder(items) {
+  const cart = getCart();
+  items.forEach(item => {
+    const idx = cart.findIndex(c => c.id === item.id);
+    if (idx > -1) cart[idx].qty += item.qty;
+    else cart.push({...item});
+  });
+  saveCart(cart);
+  updateCartCount();
+  window.location.href = 'cart.html';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const user = getCurrentUser();
+  if (user) document.getElementById('welcomeMsg').textContent = 'Welcome back, ' + user.name;
+  allOrders = getOrders().filter(o => {
+    if (!user) return true; // show all if not logged in (demo)
+    if (user.role === 'admin') return true;
+    return o.email === user.email;
+  });
+  renderOrders(allOrders);
+});
+</script>
+</body>
+</html>

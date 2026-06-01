@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout – Sindhi Zaika Achaar</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="page">
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="logo-icon"><img src="logo.png" alt="Logo"></div>
+    Sindhi Zaika Achaar
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="cart-btn" onclick="window.location='cart.html'">Cart <span class="cart-count" id="cartCount">0</span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> <span>/</span> <a href="cart.html">Cart</a> <span>/</span> <span>Checkout</span></div>
+    <h1>Checkout</h1>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <!-- Steps -->
+    <div class="checkout-steps" style="max-width:500px; margin:0 auto 40px;">
+      <div class="step-item active" id="step1item">
+        <div class="step-circle">1</div>
+        <div class="step-label">Delivery</div>
+      </div>
+      <div class="step-item" id="step2item">
+        <div class="step-circle">2</div>
+        <div class="step-label">Payment</div>
+      </div>
+      <div class="step-item" id="step3item">
+        <div class="step-circle">3</div>
+        <div class="step-label">Review</div>
+      </div>
+    </div>
+
+    <div class="checkout-layout">
+      <div>
+        <!-- STEP 1: Delivery -->
+        <div class="checkout-section active" id="section1">
+          <h3>Delivery Information</h3>
+          <div class="grid-2" style="gap:16px;">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" id="cName" placeholder="Ali Hassan">
+              <span class="form-error">Required.</span>
+            </div>
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input type="tel" id="cPhone" placeholder="03XX-XXXXXXX">
+              <span class="form-error">Required.</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="cEmail" placeholder="ali@example.com">
+            <span class="form-error">Valid email required.</span>
+          </div>
+          <div class="form-group">
+            <label>City *</label>
+            <select id="cCity">
+              <option value="">Select city</option>
+              <option>Karachi</option><option>Lahore</option><option>Islamabad</option>
+              <option>Hyderabad</option><option>Sukkur</option><option>Quetta</option>
+              <option>Faisalabad</option><option>Multan</option><option>Rawalpindi</option>
+              <option>Other</option>
+            </select>
+            <span class="form-error">Please select a city.</span>
+          </div>
+          <div class="form-group">
+            <label>Full Address *</label>
+            <textarea id="cAddress" placeholder="House/Flat No., Street, Area, Landmark..."></textarea>
+            <span class="form-error">Required.</span>
+          </div>
+          <div class="form-group">
+            <label>Order Notes (Optional)</label>
+            <textarea id="cNotes" placeholder="Any special instructions or notes..."></textarea>
+          </div>
+          <button class="btn btn-primary btn-lg" onclick="goToStep(2)">Continue to Payment</button>
+        </div>
+
+        <!-- STEP 2: Payment -->
+        <div class="checkout-section" id="section2">
+          <h3>Payment Method</h3>
+          <div class="payment-option selected" data-method="easypaisa" onclick="selectPayment(this)">
+            <input type="radio" name="payment" value="easypaisa" checked>
+            <div class="payment-option-info">
+              <h4>Easypaisa</h4>
+              <p>Pay via Easypaisa mobile account. Safe and instant.</p>
+            </div>
+          </div>
+          <div class="payment-option" data-method="jazzcash" onclick="selectPayment(this)">
+            <input type="radio" name="payment" value="jazzcash">
+            <div class="payment-option-info">
+              <h4>JazzCash</h4>
+              <p>Pay via JazzCash mobile account. Secure and reliable.</p>
+            </div>
+          </div>
+          <div class="payment-option" data-method="cod" onclick="selectPayment(this)">
+            <input type="radio" name="payment" value="cod">
+            <div class="payment-option-info">
+              <h4>Cash on Delivery (COD)</h4>
+              <p>Pay when your order arrives at your door.</p>
+            </div>
+          </div>
+          <div style="display:flex; gap:12px; margin-top:24px;">
+            <button class="btn btn-outline btn-lg" onclick="goToStep(1)">Back</button>
+            <button class="btn btn-primary btn-lg" onclick="goToStep(3)">Review Order</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Review -->
+        <div class="checkout-section" id="section3">
+          <h3>Review Your Order</h3>
+          <div id="reviewContent"></div>
+          <div style="display:flex; gap:12px; margin-top:24px;">
+            <button class="btn btn-outline btn-lg" onclick="goToStep(2)">Back</button>
+            <button class="btn btn-primary btn-lg" onclick="placeOrder()">Place Order</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div>
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+          <div id="checkoutItems"></div>
+          <div class="summary-row" style="border-top:1px solid var(--border); padding-top:12px; margin-top:8px;">
+            <span>Subtotal</span><span id="chkSubtotal">PKR 0</span>
+          </div>
+          <div class="summary-row"><span>Shipping</span><span>PKR 150</span></div>
+          <div class="summary-row total"><span>Total</span><span id="chkTotal">PKR 0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="script.js"></script>
+<script>
+let currentStep = 1;
+let selectedPayment = 'easypaisa';
+
+function updateSummary() {
+  const cart = getCart();
+  const subtotal = cart.reduce((s,i) => s+i.price*i.qty, 0);
+  document.getElementById('chkSubtotal').textContent = 'PKR ' + subtotal;
+  document.getElementById('chkTotal').textContent = 'PKR ' + (subtotal + 150);
+  document.getElementById('checkoutItems').innerHTML = cart.map(i => `
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:.88rem;">
+      <span>${i.name} x${i.qty}</span><span style="font-weight:700;">PKR ${i.price*i.qty}</span>
+    </div>`).join('');
+}
+
+function goToStep(step) {
+  if (step === 2) {
+    const fields = ['cName','cPhone','cEmail','cCity','cAddress'];
+    let valid = true;
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      el.closest('.form-group').classList.remove('error');
+      if (!el.value.trim()) { el.closest('.form-group').classList.add('error'); valid = false; }
+    });
+    if (!valid) return;
+  }
+  if (step === 3) buildReview();
+
+  document.querySelectorAll('.checkout-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section' + step).classList.add('active');
+
+  for (let i = 1; i <= 3; i++) {
+    const item = document.getElementById('step' + i + 'item');
+    item.classList.remove('active', 'done');
+    if (i < step) item.classList.add('done');
+    else if (i === step) item.classList.add('active');
+  }
+  currentStep = step;
+  window.scrollTo(0,0);
+}
+
+function selectPayment(el) {
+  document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPayment = el.dataset.method;
+  el.querySelector('input[type=radio]').checked = true;
+}
+
+function buildReview() {
+  const cart = getCart();
+  const subtotal = cart.reduce((s,i) => s+i.price*i.qty, 0);
+  const payLabels = { easypaisa:'Easypaisa', jazzcash:'JazzCash', cod:'Cash on Delivery' };
+  document.getElementById('reviewContent').innerHTML = `
+    <div style="background:var(--cream); border-radius:var(--radius-sm); padding:16px; margin-bottom:16px; border:1px solid var(--border);">
+      <h4 style="margin-bottom:12px; font-size:.95rem;">Delivery Details</h4>
+      <p style="font-size:.88rem; color:var(--mid-grey); line-height:1.8;">
+        <strong>${document.getElementById('cName').value}</strong><br>
+        ${document.getElementById('cPhone').value} | ${document.getElementById('cEmail').value}<br>
+        ${document.getElementById('cAddress').value}, ${document.getElementById('cCity').value}
+      </p>
+    </div>
+    <div style="background:var(--cream); border-radius:var(--radius-sm); padding:16px; margin-bottom:16px; border:1px solid var(--border);">
+      <h4 style="margin-bottom:12px; font-size:.95rem;">Payment: ${payLabels[selectedPayment]}</h4>
+    </div>
+    <div style="background:var(--cream); border-radius:var(--radius-sm); padding:16px; border:1px solid var(--border);">
+      <h4 style="margin-bottom:12px; font-size:.95rem;">Items (${cart.length})</h4>
+      ${cart.map(i => `<div style="display:flex; justify-content:space-between; font-size:.88rem; margin-bottom:8px;"><span>${i.name} x${i.qty}</span><span style="font-weight:700;">PKR ${i.price*i.qty}</span></div>`).join('')}
+      <div style="display:flex; justify-content:space-between; font-size:.9rem; font-weight:800; border-top:1px solid var(--border); padding-top:10px; margin-top:8px;"><span>Total</span><span style="color:var(--deep-red);">PKR ${subtotal+150}</span></div>
+    </div>`;
+}
+
+function placeOrder() {
+  const cart = getCart();
+  if (!cart.length) { alert('Your cart is empty!'); return; }
+  const subtotal = cart.reduce((s,i) => s+i.price*i.qty, 0);
+  const order = {
+    id: generateOrderId(),
+    customer: document.getElementById('cName').value,
+    email: document.getElementById('cEmail').value,
+    phone: document.getElementById('cPhone').value,
+    city: document.getElementById('cCity').value,
+    address: document.getElementById('cAddress').value,
+    notes: document.getElementById('cNotes').value,
+    items: cart,
+    total: subtotal,
+    shipping: 150,
+    grandTotal: subtotal + 150,
+    status: 'pending',
+    payment: selectedPayment,
+    date: new Date().toISOString().split('T')[0]
+  };
+  const orders = getOrders();
+  orders.push(order);
+  saveOrders(orders);
+  localStorage.setItem('lastOrder', JSON.stringify(order));
+  saveCart([]);
+  updateCartCount();
+  window.location.href = 'order-confirmation.html';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const cart = getCart();
+  if (!cart.length) { window.location.href = 'cart.html'; return; }
+  updateSummary();
+  // Pre-fill if logged in
+  const user = getCurrentUser();
+  if (user) {
+    document.getElementById('cName').value = user.name || '';
+    document.getElementById('cEmail').value = user.email || '';
+    document.getElementById('cPhone').value = user.phone || '';
+    if (user.city) document.getElementById('cCity').value = user.city;
+  }
+});
+</script>
+</body>
+</html>

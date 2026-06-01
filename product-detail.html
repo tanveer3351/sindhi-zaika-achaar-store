@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Detail – Sindhi Zaika Achaar</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="page">
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="logo-icon"><img src="logo.png" alt="Logo"></div>
+    Sindhi Zaika Achaar
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html" class="active">Products</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Register</a>
+    <button class="cart-btn" onclick="window.location='cart.html'">Cart <span class="cart-count" id="cartCount">0</span></button>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container">
+    <div class="breadcrumb" style="margin-bottom:32px;">
+      <a href="index.html">Home</a> <span>/</span>
+      <a href="products.html">Products</a> <span>/</span>
+      <span id="breadcrumbName">Product</span>
+    </div>
+    <div class="product-detail-grid" id="detailContent"></div>
+
+    <!-- Related Products -->
+    <div style="margin-top:72px;">
+      <div class="section-header">
+        <span class="tag">You May Also Like</span>
+        <h2>More Achaar</h2>
+      </div>
+      <div class="grid-4" id="relatedGrid"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand"><h3>Sindhi Zaika Achaar</h3><p>Authentic handmade Sindhi achaar delivered across Pakistan.</p></div>
+    <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="products.html">Products</a></li></ul></div>
+    <div class="footer-col"><h4>Info</h4><ul><li><a href="#">Shipping Info</a></li><li><a href="index.html#contact">Contact</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 <span>Sindhi Zaika Achaar</span>. All rights reserved.</div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+let detailQty = 1;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const id = parseInt(new URLSearchParams(window.location.search).get('id'));
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) { document.getElementById('detailContent').innerHTML = '<p>Product not found. <a href="products.html">Browse all products</a>.</p>'; return; }
+  document.title = p.name + ' – Sindhi Zaika Achaar';
+  document.getElementById('breadcrumbName').textContent = p.name;
+
+  document.getElementById('detailContent').innerHTML = `
+    <div class="product-gallery">
+      <img src="${p.image}" alt="${p.name}">
+    </div>
+    <div class="product-meta">
+      <div class="category-tag">${p.cat} achaar</div>
+      <h1>${p.name}</h1>
+      ${p.badge === 'hot' ? '<span class="badge-hot" style="position:static; display:inline-block; margin-bottom:12px;">Hot Seller</span>' : p.badge === 'new' ? '<span class="badge-new" style="position:static; display:inline-block; margin-bottom:12px;">New</span>' : ''}
+      <div class="price-big">PKR ${p.price} <span>/ ${p.weight}</span></div>
+      <p>${p.desc}</p>
+      <div class="product-specs">
+        <div class="spec-item"><div class="spec-label">Weight</div><div class="spec-value">${p.weight}</div></div>
+        <div class="spec-item"><div class="spec-label">Category</div><div class="spec-value" style="text-transform:capitalize;">${p.cat} Achaar</div></div>
+        <div class="spec-item"><div class="spec-label">Availability</div><div class="spec-value" style="color:var(--forest);">In Stock</div></div>
+        <div class="spec-item"><div class="spec-label">Origin</div><div class="spec-value">Sindh, Pakistan</div></div>
+      </div>
+      <div class="qty-row">
+        <label style="font-weight:700; font-size:.9rem;">Quantity:</label>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(-1)">-</button>
+          <span class="qty-num" id="qtyDisplay">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <button class="btn btn-primary btn-lg" onclick="addDetailToCart(${p.id})">Add to Cart</button>
+        <button class="btn btn-outline btn-lg" onclick="buyNow(${p.id})">Buy Now</button>
+      </div>
+      <div style="margin-top:24px; padding:16px; background:var(--cream); border-radius:var(--radius-sm); border:1px solid var(--border); font-size:.85rem; color:var(--mid-grey);">
+        Free delivery for orders above PKR 1,000. Ships via TCS Courier within 2-3 business days.
+      </div>
+    </div>`;
+
+  // Related
+  const related = PRODUCTS.filter(x => x.id !== id).slice(0,4);
+  document.getElementById('relatedGrid').innerHTML = related.map(p => generateProductCard(p)).join('');
+});
+
+function changeQty(d) {
+  detailQty = Math.max(1, detailQty + d);
+  document.getElementById('qtyDisplay').textContent = detailQty;
+}
+function addDetailToCart(id) {
+  const cart = getCart();
+  const idx = cart.findIndex(i => i.id === id);
+  if (idx > -1) cart[idx].qty += detailQty;
+  else { const p = PRODUCTS.find(x => x.id === id); if(p) cart.push({...p, qty: detailQty}); }
+  saveCart(cart);
+  updateCartCount();
+  const btn = event.target;
+  btn.textContent = 'Added!';
+  btn.style.background = '#2C5F2E';
+  setTimeout(() => { btn.textContent = 'Add to Cart'; btn.style.background = ''; }, 1400);
+}
+function buyNow(id) {
+  addDetailToCart(id);
+  window.location.href = 'cart.html';
+}
+</script>
+</body>
+</html>

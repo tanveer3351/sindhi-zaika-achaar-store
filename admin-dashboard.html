@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard – Sindhi Zaika Achaar</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body style="background:#f5f4f1;">
+<div class="admin-layout">
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <div class="logo-wrap"><img src="logo.png" alt="Logo"></div>
+      <div class="admin-brand-text">
+        <h3>Admin</h3>
+        <p>Sindhi Zaika</p>
+      </div>
+    </div>
+    <nav class="admin-nav">
+      <div class="admin-nav-section">Dashboard</div>
+      <a href="admin-dashboard.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <div class="admin-nav-section" style="margin-top:16px;">Management</div>
+      <a href="admin-products.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M9 7h6M9 11h6M9 15h6"/></svg>
+        Products
+      </a>
+      <a href="admin-orders.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 1v2m6-2v2M4 5h16a2 2 0 0 1 2 2v2H2V7a2 2 0 0 1 2-2z"/><rect x="2" y="9" width="20" height="11" rx="2"/></svg>
+        Orders
+      </a>
+      <a href="admin-customers.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Customers
+      </a>
+      <div class="admin-nav-section" style="margin-top:16px;">Other</div>
+      <a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        Back to Store
+      </a>
+      <a onclick="logout()" style="cursor:pointer;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <h1>Dashboard</h1>
+      <div class="admin-user">
+        <div class="admin-user-avatar" id="userInitial">A</div>
+        <div style="text-align:right;">
+          <div style="font-size:.85rem; opacity:.7;">Logged in as</div>
+          <div id="adminName">Administrator</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <!-- Stats -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:linear-gradient(135deg,#E8821A,#F5A040);">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+          </div>
+          <div class="stat-info">
+            <div class="label">Total Orders</div>
+            <div class="value" id="statOrders">0</div>
+            <div class="change">+8% this month</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background:linear-gradient(135deg,#2C5F2E,#3a7a3c);">
+            <svg viewBox="0 0 24 24"><path d="M16.56 8.94l7.72-4.45c.5-.29.5-1.07 0-1.36L16.56 0c-.5-.29-.5-1.07 0-1.36l7.72-4.45c.5-.29.5-1.07 0-1.36l-7.72-4.45c-.5-.29-1.15 0-1.15.68v8.9c0 .68.65.97 1.15.68z"/></svg>
+          </div>
+          <div class="stat-info">
+            <div class="label">Revenue</div>
+            <div class="value" id="statRevenue">PKR 0</div>
+            <div class="change">+12% this month</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background:linear-gradient(135deg,#C0392B,#E74C3C);">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="2" y1="6" x2="22" y2="6"/></svg>
+          </div>
+          <div class="stat-info">
+            <div class="label">Products</div>
+            <div class="value" id="statProducts">8</div>
+            <div class="change">All active</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background:linear-gradient(135deg,#D4A017,#E8B923);">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M16 3a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/></svg>
+          </div>
+          <div class="stat-info">
+            <div class="label">Customers</div>
+            <div class="value" id="statCustomers">0</div>
+            <div class="change">Growing</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders -->
+      <div style="background:#fff; border-radius:var(--radius-md); border:1px solid var(--border); padding:24px; margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+          <h3 style="font-family:var(--font-head); font-size:1.2rem;">Recent Orders</h3>
+          <a href="admin-orders.html" style="color:var(--saffron); font-weight:700; font-size:.85rem;">View All</a>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="recentOrdersTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Top Products -->
+      <div style="background:#fff; border-radius:var(--radius-md); border:1px solid var(--border); padding:24px;">
+        <h3 style="font-family:var(--font-head); font-size:1.2rem; margin-bottom:20px;">Our Products</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px;">
+          <div id="productsPreview"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (!isAdmin()) { window.location.href = 'admin-login.html'; return; }
+  const user = getCurrentUser();
+  if (user) {
+    document.getElementById('adminName').textContent = user.name;
+    document.getElementById('userInitial').textContent = user.name.charAt(0).toUpperCase();
+  }
+
+  const orders = getOrders();
+  const users = getUsers().filter(u => u.role === 'customer');
+  const statOrders = orders.length;
+  const statRevenue = orders.reduce((s,o) => s+o.grandTotal, 0);
+  const statProducts = PRODUCTS.length;
+  const statCustomers = users.length;
+
+  document.getElementById('statOrders').textContent = statOrders;
+  document.getElementById('statRevenue').textContent = 'PKR ' + statRevenue.toLocaleString();
+  document.getElementById('statProducts').textContent = statProducts;
+  document.getElementById('statCustomers').textContent = statCustomers;
+
+  // Recent orders table
+  const recents = orders.slice(-5).reverse();
+  const statusColors = { pending:'status-pending', confirmed:'status-confirmed', processing:'status-processing', shipped:'status-shipped', delivered:'status-delivered', cancelled:'status-cancelled' };
+  document.getElementById('recentOrdersTable').innerHTML = recents.map(o => `
+    <tr>
+      <td><strong>${o.id}</strong></td>
+      <td>${o.customer}</td>
+      <td>${o.items.length} item${o.items.length!==1?'s':''}</td>
+      <td><strong>PKR ${o.grandTotal}</strong></td>
+      <td><span class="status ${statusColors[o.status] || 'status-pending'}">${o.status}</span></td>
+      <td>${o.date}</td>
+    </tr>`).join('');
+
+  // Products preview
+  document.getElementById('productsPreview').innerHTML = PRODUCTS.slice(0,4).map(p => `
+    <div style="background:var(--cream); border-radius:var(--radius-md); border:1px solid var(--border); padding:12px; text-align:center;">
+      <img src="${p.image}" alt="${p.name}" style="width:100%; height:120px; object-fit:cover; border-radius:var(--radius-sm); margin-bottom:8px;">
+      <h4 style="font-size:.9rem; margin-bottom:4px;">${p.name}</h4>
+      <div style="font-size:.8rem; color:var(--mid-grey);">${p.cat}</div>
+      <div style="font-weight:800; color:var(--deep-red); margin-top:6px;">PKR ${p.price}</div>
+    </div>`).join('');
+});
+</script>
+</body>
+</html>
