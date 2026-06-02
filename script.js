@@ -11,6 +11,38 @@ const PRODUCTS = [
   { id:8, name:'Green Mango Achaar', cat:'mango', image:'mango-achaar.png', price:230, weight:'500g', desc:'Extra tangy young mango pickled with nigella seeds and chilli flakes. Crisp texture, intense flavour.', badge:'', stock:38 },
 ];
 
+// ===== MOBILE MENU UTILITIES =====
+function toggleMobileMenu() {
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  if (hamburger) hamburger.classList.toggle('active');
+  if (navLinks) navLinks.classList.toggle('active');
+}
+
+// Close mobile menu when a link is clicked
+document.addEventListener('DOMContentLoaded', () => {
+  const navLinks = document.getElementById('navLinks');
+  if (navLinks) {
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        const hamburger = document.getElementById('hamburger');
+        if (hamburger) hamburger.classList.remove('active');
+      });
+    });
+  }
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    const navbar = document.querySelector('.navbar');
+    if (navbar && !navbar.contains(e.target)) {
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      if (hamburger) hamburger.classList.remove('active');
+      if (navLinks) navLinks.classList.remove('active');
+    }
+  });
+});
+
 // ===== CART UTILITIES =====
 function getCart() { return JSON.parse(localStorage.getItem('cart') || '[]'); }
 function saveCart(cart) { localStorage.setItem('cart', JSON.stringify(cart)); }
